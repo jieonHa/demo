@@ -1,0 +1,31 @@
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 페이지 제목과 설명
+st.title('Survival Rate on Titanic - Pie Chart')
+st.write('This app displays the survival rate on the Titanic using a pie chart.')
+
+# 데이터 파일 업로드
+uploaded_file = st.file_uploader("Upload Titanic dataset (CSV file)", type="csv")
+
+if uploaded_file is not None:
+    # 업로드된 파일을 데이터프레임으로 읽기
+    titanic_data = pd.read_csv(uploaded_file)
+
+    # 생존자와 사망자 수 count
+    survived_count = titanic_data['Survived'].value_counts()
+
+    # 파이 차트 그리기
+    labels = ['Not Survived', 'Survived']
+    sizes = [survived_count[0], survived_count[1]]
+    colors = ['lightcoral', 'lightskyblue']
+    explode = (0.1, 0)  # 사망 부분을 조금 강조하기 위해 explode 설정
+
+    fig, ax = plt.subplots(figsize=(6, 6))
+    ax.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%', shadow=True, startangle=140)
+    ax.axis('equal')  # 원형으로 표시
+    ax.set_title('Survival Rate on Titanic')
+
+    # Streamlit에 Matplotlib 그래프 표시
+    st.pyplot(fig)
